@@ -1,7 +1,10 @@
 name: flutter_spiffing
-description: "A new Flutter project."
+description: >
+  Flutter widgets for building security-label editor/picker UIs on top of
+  the `spiffing` (SPIF/Label/Clearance) library.
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: ^3.12.2
@@ -10,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  spiffing:
+    path: ../spiffing-dart
 
 dev_dependencies:
   flutter_test:
