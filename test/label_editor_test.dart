@@ -32,6 +32,13 @@ const _testSpifXml = '''
         <tagCategory name="Lactose" lacv="1"/>
       </securityCategoryTag>
     </securityCategoryTagSet>
+    <securityCategoryTagSet name="Trade Secrets" id="1.2.826.0.1.6726289.0.0.3">
+      <securityCategoryTag name="Trade Secrets" tagType="permissive">
+        <tagCategory name="Recipe" lacv="1">
+          <excludedClass>Freely Available</excludedClass>
+        </tagCategory>
+      </securityCategoryTag>
+    </securityCategoryTagSet>
   </securityCategoryTagSets>
 </SPIF>
 ''';
@@ -90,26 +97,66 @@ void main() {
     expect(label.hasCategory(sweet), isTrue);
   });
 
-  testWidgets('a chip that would make the label invalid is disabled', (
-    tester,
-  ) async {
-    await pumpEditor(tester);
+  testWidgets(
+    'a chip that would make the label invalid on removal is disabled',
+    (tester) async {
+      await pumpEditor(tester);
 
-    // "Chocolate" excludes the "Commodity" classification, but the label
-    // starts as "Freely Available" so it should currently be selectable.
-    final chocolateChip = tester.widget<FilterChip>(
-      find.widgetWithText(FilterChip, 'Chocolate'),
-    );
-    expect(chocolateChip.onSelected, isNotNull);
+      // Select "Chocolate" while "Freely Available" (no exclusion applies).
+      await tester.tap(find.widgetWithText(FilterChip, 'Chocolate'));
+      await tester.pump();
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Commodity'));
-    await tester.pump();
+      // "Luxury" requires "Chocolate" (already selected), and doesn't
+      // exclude it, so switching to "Luxury" should succeed and leave the
+      // chip visible...
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Luxury'));
+      await tester.pump();
 
-    final chocolateChipAfter = tester.widget<FilterChip>(
-      find.widgetWithText(FilterChip, 'Chocolate'),
-    );
-    expect(chocolateChipAfter.onSelected, isNull);
-  });
+      final chocolateChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Chocolate'),
+      );
+      expect(chocolateChip.selected, isTrue);
+      // ...but removing it now would leave "Luxury" without its required
+      // category, so it must be disabled rather than hidden.
+      expect(chocolateChip.onSelected, isNull);
+    },
+  );
+
+  testWidgets(
+    'a category excluded by the current classification is hidden entirely',
+    (tester) async {
+      await pumpEditor(tester);
+
+      // "Chocolate" excludes the "Commodity" classification, but the label
+      // starts as "Freely Available" so it should currently be shown.
+      expect(find.widgetWithText(FilterChip, 'Chocolate'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Commodity'));
+      await tester.pump();
+
+      // Rather than merely being disabled, the excluded chip disappears.
+      expect(find.widgetWithText(FilterChip, 'Chocolate'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'a tag set with every category excluded by the classification is hidden',
+    (tester) async {
+      await pumpEditor(tester);
+
+      // "Recipe" excludes "Freely Available" (the label's starting/default
+      // classification), and it's the only category in "Trade Secrets", so
+      // the whole tag set should be absent, not just its chip.
+      expect(find.text('Recipe'), findsNothing);
+      expect(find.text('Trade Secrets'), findsNothing);
+
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Commodity'));
+      await tester.pump();
+
+      expect(find.text('Recipe'), findsOneWidget);
+      expect(find.text('Trade Secrets'), findsWidgets);
+    },
+  );
 
   testWidgets('shows a clearance indicator when a clearance is supplied', (
     tester,

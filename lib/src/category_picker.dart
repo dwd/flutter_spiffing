@@ -50,9 +50,18 @@ class TagCategoryPicker extends StatelessWidget {
   final VoidCallback onChanged;
   final String langTag;
 
+  /// The categories of [tag] that aren't excluded by [label]'s current
+  /// classification (see [isCategoryExcludedByClassification]); these are
+  /// hidden entirely, rather than merely disabled, since they can never be
+  /// selected while that classification is in effect.
+  List<Category> get _selectableCategories => tag
+      .categories()
+      .where((category) => !isCategoryExcludedByClassification(label, category))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
-    final categories = tag.categories();
+    final categories = _selectableCategories;
     if (categories.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -117,9 +126,22 @@ class TagSetPicker extends StatelessWidget {
   final VoidCallback onChanged;
   final String langTag;
 
+  /// The tags of [tagSet] with at least one category not excluded by
+  /// [label]'s current classification; a tag whose every category is
+  /// excluded has nothing to offer at this classification, so it (and, if
+  /// every tag is likewise empty, the whole tag set) is hidden entirely.
+  List<Tag> get _selectableTags => tagSet
+      .tags()
+      .where(
+        (tag) => tag.categories().any(
+          (category) => !isCategoryExcludedByClassification(label, category),
+        ),
+      )
+      .toList();
+
   @override
   Widget build(BuildContext context) {
-    final tags = tagSet.tags();
+    final tags = _selectableTags;
     if (tags.isEmpty) return const SizedBox.shrink();
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),

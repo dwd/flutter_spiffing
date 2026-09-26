@@ -10,7 +10,10 @@ category chips for each tag set, see a live marking preview, and (if a
 holder's `Clearance` is supplied) see whether the label being built would
 actually be releasable to them. Widgets stay disabled/hidden for
 combinations the policy wouldn't allow, using the SPIF's own validity rules
-rather than duplicating that logic in the UI.
+rather than duplicating that logic in the UI: a category (or tag, or whole
+tag set) that the current classification excludes outright is hidden
+entirely, while a category that's merely off-limits given the label's
+*other* selected categories stays visible but disabled.
 
 This package is Flutter-only and has no platform-specific code, so it works
 on Web, Android, iOS, and desktop wherever Flutter does.

@@ -27,3 +27,11 @@ bool canToggleCategory(
       ? canRemoveCategory(spif, label, category)
       : label.canAddCategory(category);
 }
+
+/// Whether [category] is excluded outright by [label]'s current
+/// classification (i.e. the SPIF's `excludedClass` rule for [category]
+/// names that classification). Such categories are never selectable for
+/// this classification, so pickers should hide them entirely rather than
+/// merely disabling them.
+bool isCategoryExcludedByClassification(Label label, Category category) =>
+    category.excludesClassification(label.classification);
