@@ -14,7 +14,9 @@ dependencies:
   flutter:
     sdk: flutter
   spiffing:
-    path: ../spiffing-dart
+    git:
+      url: https://github.com/dwd/spiffing-dart.git
+      ref: 43347a4
 
 dev_dependencies:
   flutter_test:

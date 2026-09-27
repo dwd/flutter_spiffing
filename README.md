@@ -1,8 +1,8 @@
 # flutter_spiffing
 
 Flutter widgets for building security-label editor/picker UIs on top of the
-[`spiffing`](../spiffing-dart) library (a pure-Dart port of the C++
-`spiffing` SPIF/Label/Clearance policy engine).
+[`spiffing`](https://github.com/dwd/spiffing-dart) library (a pure-Dart port
+of the C++ `spiffing` SPIF/Label/Clearance policy engine).
 
 Given a parsed **SPIF** (Security Policy Information File) and a `Label` to
 edit, this package renders a reactive editor: pick a classification, toggle
@@ -37,8 +37,8 @@ on Web, Android, iOS, and desktop wherever Flutter does.
 ## Getting started
 
 Add both this package and `spiffing` as dependencies (until published, a
-`path`/`git` dependency works fine — see this package's own `pubspec.yaml`
-for an example pointing at a sibling `spiffing-dart` checkout).
+`git` dependency works fine — see this package's own `pubspec.yaml` for an
+example pointing at the `spiffing-dart` repository).
 
 ## Usage
 

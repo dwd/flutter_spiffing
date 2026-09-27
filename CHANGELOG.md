@@ -1,5 +1,8 @@
 ## Unreleased
 
+* The `spiffing` dependency is now a `git` dependency pointing at the
+  [`spiffing-dart`](https://github.com/dwd/spiffing-dart) repository,
+  instead of a filesystem `path` dependency on a sibling checkout.
 * `TagSetPicker`/`TagCategoryPicker` now hide categories, tags, and whole
   tag sets that the current classification excludes outright (via the
   SPIF's `excludedClass` rule), instead of merely disabling their chips.
