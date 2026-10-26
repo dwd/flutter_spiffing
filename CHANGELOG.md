@@ -1,5 +1,9 @@
 ## Unreleased
 
+* Bumped the pinned `spiffing-dart` git revision to pick up its internal
+  migration to the `xml` package's `namespaceUri` API (and the accompanying
+  `xml`/`test`/`lints` dependency bumps). No public API changes, so no
+  changes were needed on this side.
 * The `spiffing` dependency is now a `git` dependency pointing at the
   [`spiffing-dart`](https://github.com/dwd/spiffing-dart) repository,
   instead of a filesystem `path` dependency on a sibling checkout.
